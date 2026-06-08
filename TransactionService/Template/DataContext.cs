@@ -1,23 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using TransactionService.Infra.Entidades;
 
-namespace Exemplo
+namespace TransactionService
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options)
+            : base(options)
         {
-
         }
-        
-        //public DbSet<Exemplo> Exemplos { get; set; }
-        
+
+        public DbSet<Transacao> Transacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Exemplo>().HasKey(p => p.Id);
-            
+            modelBuilder.Entity<Transacao>()
+                .HasKey(t => t.Id);
 
             base.OnModelCreating(modelBuilder);
         }
