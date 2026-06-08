@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using AnonymizationService.Infra.Entidades;
 
 namespace Exemplo
 {
@@ -10,14 +9,15 @@ namespace Exemplo
         {
 
         }
-        
-        //public DbSet<Exemplo> Exemplos { get; set; }
-        
+
+        public DbSet<RegistroAnonimizacao> RegistrosAnonimizacao { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Exemplo>().HasKey(p => p.Id);
-            
+            modelBuilder.Entity<RegistroAnonimizacao>()
+            .HasKey(r => r.Id);
+
 
             base.OnModelCreating(modelBuilder);
         }
