@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using ExtractionService.Infra.Entidades;
 
 namespace Exemplo
 {
@@ -10,14 +9,15 @@ namespace Exemplo
         {
 
         }
-        
-        //public DbSet<Exemplo> Exemplos { get; set; }
-        
+
+        public DbSet<RegistroExtracao> RegistrosExtracao { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Exemplo>().HasKey(p => p.Id);
-            
+            modelBuilder.Entity<RegistroExtracao>()
+            .HasKey(r => r.Id);
+
 
             base.OnModelCreating(modelBuilder);
         }
