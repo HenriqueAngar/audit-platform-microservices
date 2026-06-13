@@ -1,5 +1,5 @@
-using Exemplo;
 using ExtractionService;
+using ExtractionService.Servicos;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +9,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<
+    IServExtracao,
+    ServExtracao>();
+
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+        builder.Configuration.GetConnectionString(
+            "DefaultConnection"
+        )
     )
 );
 

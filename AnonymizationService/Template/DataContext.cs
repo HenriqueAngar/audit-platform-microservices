@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AnonymizationService.Infra.Entidades;
 
-namespace Exemplo
+namespace AnonymizationService
 {
     public class DataContext : DbContext
     {

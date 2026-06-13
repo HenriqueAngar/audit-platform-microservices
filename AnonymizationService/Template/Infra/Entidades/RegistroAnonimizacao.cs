@@ -1,20 +1,19 @@
-﻿namespace AnonymizationService.Infra.Entidades;
-
-public class RegistroAnonimizacao
+﻿public class RegistroAnonimizacao
 {
     public int Id { get; set; }
 
-    public int SolicitanteId { get; set; }
+    public int ExtracaoId { get; set; }
 
-    public string TipoSolicitante { get; set; } = string.Empty;
+    public string ChaveCriptografia { get; set; }
+        = string.Empty;
 
-    public string ParametrosExtracao { get; set; } = string.Empty;
+    public string VetorInicializacao { get; set; }
+        = string.Empty;
 
-    public string ChaveCriptografia { get; set; } = string.Empty;
+    public string CamposAnonimizados { get; set; }
+        = string.Empty;
 
-    public DateTime DataSolicitacao { get; set; }
+    public int QuantidadeRegistros { get; set; }
 
-    public bool PermiteDescriptografia { get; set; }
-
-    public string Status { get; set; } = string.Empty;
+    public DateTime DataProcessamento { get; set; }
 }

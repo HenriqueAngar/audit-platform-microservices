@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ExtractionService.Infra.Entidades;
 
-namespace Exemplo
+namespace ExtractionService
 {
     public class DataContext : DbContext
     {
