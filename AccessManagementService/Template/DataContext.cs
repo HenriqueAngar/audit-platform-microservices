@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using AccessManagementService.Infra.Entidades;
 
-namespace Exemplo
+namespace AccessManagementService
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(
+            DbContextOptions<DataContext> options)
+            : base(options)
         {
-
         }
-        
-        //public DbSet<Exemplo> Exemplos { get; set; }
-        
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<Usuario> Usuarios { get; set; }
+
+        protected override void OnModelCreating(
+            ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Exemplo>().HasKey(p => p.Id);
-            
+            modelBuilder.Entity<Usuario>()
+                .HasKey(u => u.Id);
 
             base.OnModelCreating(modelBuilder);
         }
