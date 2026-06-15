@@ -191,8 +191,7 @@ AnonymizationService
 ## Equipe
 
 * Henrique
-* Luis Antônio Coral
-* Integrante 3
+* Luiz Antônio Coral
 
 ---
 
