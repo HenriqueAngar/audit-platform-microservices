@@ -1,138 +1,82 @@
-# Audit Platform Microservices
+# AUDIT PLATFORM MICROSERVICES
 
-Plataforma de auditoria desenvolvida com arquitetura de microsserviços para a disciplina de Arquitetura de Software.
+Projeto desenvolvido para a disciplina de Arquitetura de Software utilizando arquitetura de microsserviços, APIs REST, .NET e SQLite.
 
-O projeto tem como objetivo aplicar conceitos de sistemas distribuídos, integração entre serviços, APIs REST e persistência de dados utilizando .NET e SQLite.
+## Documento de Requisitos
 
----
+### 1. Propósito do Sistema
 
-# Documento de Requisitos
+O sistema tem como objetivo registrar movimentações financeiras e disponibilizar mecanismos de consulta e extração dessas informações de forma controlada.
 
-## 1. Propósito do Sistema
+Além das consultas, o sistema permite anonimizar dados sensíveis antes de disponibilizar resultados para usuários não autorizados, mantendo rastreabilidade das operações realizadas.
 
-O sistema tem como finalidade registrar transações financeiras e manter um histórico de auditoria das operações realizadas pelos usuários.
+### 2. Usuários do Sistema
 
-A aplicação busca garantir rastreabilidade das informações, permitindo consultar registros, acompanhar alterações e gerar evidências para auditoria.
+#### Administrador
 
----
+Responsável pelo cadastro e gerenciamento de usuários da plataforma.
 
-## 2. Usuários do Sistema
+#### Agente Autorizado
 
-### Auditor
+Usuário com permissão para realizar consultas e extrações de dados financeiros.
 
-Responsável por consultar registros de auditoria e acompanhar alterações realizadas no sistema.
+#### Pessoa Externa
 
-### Operador Financeiro
+Usuário que pode solicitar extrações de informações, recebendo os resultados anonimizados quando necessário.
 
-Responsável pelo cadastro e manutenção das transações financeiras.
+### 3. Requisitos Funcionais
 
-### Administrador
+#### RF01
 
-Responsável pela gestão dos usuários e acompanhamento geral do sistema.
+Cadastrar usuários no sistema.
 
----
-
-## 3. Requisitos Funcionais
-
-### RF01
-
-Cadastrar usuários.
-
-### RF02
+#### RF02
 
 Consultar usuários cadastrados.
 
-### RF03
+#### RF03
 
-Registrar transações financeiras.
+Validar autenticação de usuários.
 
-### RF04
+#### RF04
 
-Consultar transações financeiras.
+Verificar autorização de acesso às funcionalidades da plataforma.
 
-### RF05
+#### RF05
 
-Registrar eventos de auditoria.
+Registrar movimentações financeiras.
 
-### RF06
+#### RF06
 
-Consultar histórico de auditoria.
+Consultar movimentações financeiras registradas.
 
-### RF07
+#### RF07
 
-Validar usuários antes do registro de transações.
+Solicitar extrações de informações financeiras.
 
-### RF08
+#### RF08
 
-Atualizar informações de auditoria quando uma transação for alterada.
+Registrar solicitações de extração realizadas pelos usuários.
 
----
+#### RF09
 
-# Descritivo Técnico
+Anonimizar dados sensíveis durante o processamento das extrações.
 
-## Arquitetura
+#### RF10
 
-O sistema é composto por três microsserviços independentes, desenvolvidos utilizando .NET, SQLite e comunicação REST.
+Registrar informações sobre processos de anonimização realizados.
 
----
+#### RF11
 
-## User Service
-
-Responsável pelo gerenciamento de usuários do sistema.
-
-### Funcionalidades
-
-* Cadastro de usuários
-* Consulta de usuários
-* Validação de existência de usuário
+Consultar registros de anonimização previamente executados.
 
 ---
 
-## Transaction Service
+## Descritivo Técnico
 
-Responsável pelo gerenciamento das transações financeiras.
+### Arquitetura
 
-### Funcionalidades
-
-* Cadastro de transações
-* Consulta de transações
-* Atualização de transações
-
----
-
-## Audit Service
-
-Responsável pelo registro e consulta de eventos de auditoria.
-
-### Funcionalidades
-
-* Registro de eventos
-* Histórico de auditoria
-* Consulta de logs
-
----
-
-# Integrações Entre Microsserviços
-
-## Integração 1 - Busca de Dados
-
-Transaction Service consulta User Service para validar se o usuário existe antes de registrar uma transação.
-
----
-
-## Integração 2 - Busca de Dados
-
-Audit Service consulta Transaction Service para obter informações detalhadas de uma transação durante uma auditoria.
-
----
-
-## Integração 3 - Alteração de Dados
-
-Quando uma transação é criada ou atualizada no Transaction Service, um evento é enviado para o Audit Service, que registra automaticamente um novo histórico de auditoria.
-
----
-
-# Tecnologias Utilizadas
+O sistema é composto por microsserviços independentes desenvolvidos utilizando:
 
 * .NET 8
 * ASP.NET Core Web API
@@ -141,44 +85,125 @@ Quando uma transação é criada ou atualizada no Transaction Service, um evento
 * REST API
 * Swagger/OpenAPI
 
+Cada microsserviço possui banco de dados próprio e responsabilidade específica.
+
 ---
 
-# Estrutura do Projeto
+### AccessManagementService
+
+Responsável pelo gerenciamento de usuários e controle de acesso.
+
+#### Funcionalidades
+
+* Cadastro de usuários
+* Consulta de usuários
+* Autenticação
+* Validação de autorização
+
+---
+
+### TransactionService
+
+Responsável pelo armazenamento das movimentações financeiras.
+
+#### Funcionalidades
+
+* Registro de transações financeiras
+* Consulta de transações
+* Armazenamento de dados financeiros
+
+---
+
+### ExtractionService
+
+Responsável pelo processamento das solicitações de extração de informações.
+
+#### Funcionalidades
+
+* Registro de solicitações de extração
+* Processamento de consultas
+* Integração com outros microsserviços
+* Controle do fluxo de anonimização
+
+---
+
+### AnonymizationService
+
+Responsável pela anonimização de dados sensíveis.
+
+#### Funcionalidades
+
+* Criptografia de dados
+* Registro de chaves e metadados de anonimização
+* Consulta de registros de anonimização
+* Retorno de dados anonimizados
+
+---
+
+## Integrações Entre Microsserviços
+
+### Integração 1 – Busca de Dados
+
+O ExtractionService consulta o AccessManagementService para verificar se o usuário possui autorização para realizar uma extração.
+
+### Integração 2 – Busca de Dados
+
+O ExtractionService consulta o TransactionService para obter os dados financeiros solicitados na extração.
+
+### Integração 3 – Alteração de Dados
+
+O ExtractionService envia dados para o AnonymizationService quando a extração exige anonimização. O AnonymizationService processa os dados e registra um novo registro de anonimização em seu banco de dados.
+
+---
+
+## Estrutura da Solução
 
 ```text
-src/
-├── UserService
-├── TransactionService
-├── AuditService
-└── Shared
+AccessManagementService
+TransactionService
+ExtractionService
+AnonymizationService
 ```
 
 ---
 
-# Execução
+## Tecnologias Utilizadas
 
-1. Clonar o repositório.
-2. Restaurar os pacotes NuGet.
-3. Executar as migrations.
-4. Iniciar os microsserviços.
-5. Acessar a documentação Swagger de cada serviço.
+* .NET 8
+* ASP.NET Core
+* Entity Framework Core
+* SQLite
+* Swagger
+* REST APIs
 
 ---
 
-# Equipe
+## Execução
+
+1. Restaurar os pacotes NuGet.
+2. Executar as migrations de cada microsserviço.
+3. Executar os microsserviços individualmente.
+4. Acessar o Swagger de cada serviço.
+5. Realizar os testes de integração entre os microsserviços.
+
+---
+
+## Equipe
 
 * Henrique
-* Integrante 2
+* Luis Antônio Coral
 * Integrante 3
 
 ---
 
-# Critérios Atendidos
+## Critérios Atendidos
 
-* Três microsserviços independentes.
-* Duas integrações de consulta entre serviços.
-* Uma integração de alteração de dados.
+* Arquitetura baseada em microsserviços.
+* Quatro microsserviços independentes.
+* Duas integrações de consulta entre microsserviços.
+* Uma integração de alteração de dados entre microsserviços.
 * Utilização de .NET, SQLite e APIs REST.
 * Documento de requisitos incorporado ao README.
-* Descritivo técnico da arquitetura.
+* Descritivo técnico da arquitetura incluído na documentação.
+
 
