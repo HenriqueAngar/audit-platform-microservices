@@ -188,6 +188,50 @@ AnonymizationService
 
 ---
 
+## Integração Implementada (ExtractionService ↔ AccessManagementService ↔ AnonymizationService)
+
+Para validar a comunicação entre microsserviços via HTTP, foi implementado e testado o fluxo abaixo, envolvendo três serviços da plataforma.
+
+### Portas utilizadas
+
+| Serviço | Porta |
+|---|---|
+| AccessManagementService | 5089 |
+| AnonymizationService | 5090 |
+| ExtractionService | 5091 |
+
+### Fluxo da integração
+
+1. O `ExtractionService` recebe uma solicitação de extração (`POST /api/Extracao`) contendo o `SolicitanteId`.
+2. Antes de processar, ele consulta o `AccessManagementService` (`GET /api/Usuario/{id}`) para validar se o solicitante existe e está autorizado.
+3. Se o solicitante não estiver autorizado, a extração é negada (status `NEGADA`) e nenhum dado é processado.
+4. Se autorizado, e a flag `AnonimizarResultado` estiver marcada, o `ExtractionService` envia os dados extraídos para o `AnonymizationService` (`POST /api/Anonimizacao`), que retorna os dados criptografados.
+5. O resultado final (anonimizado ou não) é persistido no banco do `ExtractionService` e retornado ao solicitante.
+
+### Endpoints adicionados/implementados
+
+**AccessManagementService**
+* `POST /api/Usuario` — cria usuário
+* `POST /api/Usuario/login` — valida login
+* `GET /api/Usuario/{id}` — consulta usuário e status de autorização (usado pelo ExtractionService)
+
+**AnonymizationService**
+* `POST /api/Anonimizacao` — processa e retorna dados anonimizados (usado pelo ExtractionService)
+* `GET /api/Anonimizacao/{id}` — consulta log de uma anonimização
+
+**ExtractionService**
+* `POST /api/Extracao` — processa solicitação de extração, orquestrando as chamadas aos dois serviços acima
+* `GET /api/Extracao/{id}` — consulta um registro de extração já processado
+
+### Como testar localmente
+
+1. Subir os três serviços em paralelo (cada um em sua porta, conforme tabela acima).
+2. Cadastrar um usuário autorizado via Swagger do `AccessManagementService`.
+3. Chamar `POST /api/Extracao` no `ExtractionService` informando o `SolicitanteId` cadastrado.
+4. Verificar no retorno o `RegistroExtracaoId` e o status da operação.
+
+---
+
 ## Equipe
 
 * Henrique
@@ -204,5 +248,3 @@ AnonymizationService
 * Utilização de .NET, SQLite e APIs REST.
 * Documento de requisitos incorporado ao README.
 * Descritivo técnico da arquitetura incluído na documentação.
-
-
