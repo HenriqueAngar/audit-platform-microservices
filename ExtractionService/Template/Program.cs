@@ -9,15 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<
-    IServExtracao,
-    ServExtracao>();
+// HttpClient para chamadas entre microsserviços
+builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IServExtracao, ServExtracao>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite(
-        builder.Configuration.GetConnectionString(
-            "DefaultConnection"
-        )
+        builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
@@ -30,9 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
